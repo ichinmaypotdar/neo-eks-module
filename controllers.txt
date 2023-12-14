@@ -1,0 +1,36 @@
+#Create service account for ALB
+eksctl create iamserviceaccount \
+  --cluster=neo-prod-rto-model-inferencing-v3-eks-cluster \
+  --namespace=kube-system \
+  --name=aws-load-balancer-controller \
+  --role-name neo-prod-model-interference-EKS-EC2LoadBalancerControllerRole \
+  --attach-policy-arn=arn:aws:iam::072654412911:policy/AWSLoadBalancerControllerIAMPolicy \
+  --approve
+
+# Install and configure helm
+helm repo add eks https://aws.github.io/eks-charts
+helm repo update 
+  
+#Install LB controller
+helm install aws-load-balancer-controller eks/aws-load-balancer-controller \
+  -n kube-system \
+  --set clusterName=neo-prod-rto-model-inferencing-v3-eks-cluster \
+  --set serviceAccount.create=false \
+  --set serviceAccount.name=aws-load-balancer-controller \
+  --set region=ap-south-1 \
+  --set vpcId=vpc-02587c24d9d430dad
+  
+  
+# Create service account for EBS 
+ eksctl create iamserviceaccount \
+  --name ebs-csi-controller-sa \
+  --namespace kube-system \
+  --cluster neo-prod-rto-model-inferencing-v3-eks-cluster  \
+  --attach-policy-arn arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy \
+  --approve \
+  --role-only \
+  --role-name neo-prod-rto-model-inferencing-Amazon_EKS_EBS_CSI_DriverRole
+  
+#Install EBS controller
+eksctl create addon --name aws-ebs-csi-driver --cluster neo-prod-rto-model-inferencing-v3-eks-cluster --service-account-role-arn arn:aws:iam::072654412911:role/neo-prod-rto-model-inferencing-Amazon_EKS_EBS_CSI_DriverRole --force
+                                                                                

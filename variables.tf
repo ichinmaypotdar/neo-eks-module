@@ -31,6 +31,8 @@ variable "min_count" {}
 variable "eks_private_access" {
   default = "false"
 }
+variable "eks_public_access" {
+}
 variable "vpn_securitygroup" {}
 
 

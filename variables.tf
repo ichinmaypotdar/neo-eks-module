@@ -18,8 +18,7 @@ variable "Service_Version" {
 
 
 variable "vpc_id" {}
-variable "private_subnets" {}
-#variable "public_subnets" {}
+
 
 variable "eks_cluster_subnets" {}
 variable "node_group_instance_type" {}

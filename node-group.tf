@@ -41,7 +41,7 @@ resource "aws_eks_node_group" "eks-node-group" {
   cluster_name    = aws_eks_cluster.eks-cluster.name
   node_group_name = "${local.name_prefix}-${var.project}-eks-node-group"
   node_role_arn   = aws_iam_role.eks-worker-node-role.arn
-  subnet_ids = var.private_subnets
+  subnet_ids = var.eks_cluster_subnets
   instance_types = var.node_group_instance_type
 
   scaling_config {
